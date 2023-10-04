@@ -14,12 +14,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -40,7 +38,7 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getUsernameOrEmail(), loginDto.getPassword()));
+                loginDto.getEmail(), loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return new ResponseEntity<>("User signed-in successfully!.", HttpStatus.OK);
@@ -48,11 +46,6 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto){
-
-        // add check for username exists in a DB
-        if(userRepository.existsByUsername(signUpDto.getUsername())){
-            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
-        }
 
         // add check for email exists in DB
         if(userRepository.existsByEmail(signUpDto.getEmail())){
@@ -62,7 +55,6 @@ public class AuthController {
         // create user object
         User user = new User();
         user.setName(signUpDto.getName());
-        user.setUsername(signUpDto.getUsername());
         user.setEmail(signUpDto.getEmail());
         user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
 
@@ -70,8 +62,20 @@ public class AuthController {
         user.setRoles(Collections.singleton(roles));
 
         userRepository.save(user);
-
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
 
+    }
+
+
+
+    @GetMapping("/users")
+    public ResponseEntity<User> getUsers(){
+        Optional<User> user = userRepository.findByEmail("karthikeyas1019@gmail.com");
+
+        if(user.isPresent()){
+            User user1 = user.get();
+            return new ResponseEntity<>(user1, HttpStatus.OK);
+        }
+        return null;
     }
 }
