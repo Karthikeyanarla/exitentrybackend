@@ -42,6 +42,7 @@ public class SecurityConfig{
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/swagger-resources/**").permitAll()
                                 .requestMatchers("/webjars/**").permitAll()
+//                                .requestMatchers("/api/auth/manager/signup").hasAnyRole("ADMIN")
                                 .anyRequest().authenticated()
                 ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();

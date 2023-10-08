@@ -1,24 +1,26 @@
 package com.iitgn.entryexit.entities;
 
-
 import com.iitgn.entryexit.models.EntryExit;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Entity
-@Table
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
 @Setter
+@Table(name = "records")
 public class Record {
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
-
-    private String name;
-
+    private int memberId;
     @Enumerated(EnumType.ORDINAL)
     private EntryExit type;
+    private String inCampusAddress;
+    private Date date;
+    private String visitorType;
 }
