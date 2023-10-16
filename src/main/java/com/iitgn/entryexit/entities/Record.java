@@ -16,7 +16,7 @@ import java.util.Date;
 public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private int id;
     private int memberId;
     @Enumerated(EnumType.ORDINAL)
     private EntryExit type;
