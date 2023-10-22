@@ -40,6 +40,8 @@ public class AuthController {
         String response = authService.securitySignUp(signUpDto);
         return ResponseEntity.ok(response);
     }
-    
+
+
+
 
 }

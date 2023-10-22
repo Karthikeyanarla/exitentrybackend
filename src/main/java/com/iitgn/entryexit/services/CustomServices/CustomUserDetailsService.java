@@ -1,4 +1,4 @@
-package com.iitgn.entryexit.services;
+package com.iitgn.entryexit.services.CustomServices;
 
 import com.iitgn.entryexit.entities.Security;
 import com.iitgn.entryexit.entities.User;

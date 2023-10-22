@@ -1,5 +1,7 @@
 package com.iitgn.entryexit.config;
 
+import com.iitgn.entryexit.security.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.iitgn.entryexit.security.JwtAuthenticationFilter;
 
 
 @Configuration
@@ -19,6 +24,12 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig{
 
     private UserDetailsService userDetailsService;
+
+    private final JwtAuthenticationFilter JwtAuthenticationFilter;
+
+    SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter){
+        this.JwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -35,9 +46,7 @@ public class SecurityConfig{
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
-                        //authorize.anyRequest().authenticated()
-                        authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                                .requestMatchers("/swagger-ui/**").permitAll()
+                        authorize.requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll().
                                 requestMatchers(" /swagger-ui/swagger-ui-standalone-preset.js").permitAll()
                                 .requestMatchers("/swagger-ui/swagger-ui.css").permitAll()
@@ -45,9 +54,20 @@ public class SecurityConfig{
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/swagger-resources/**").permitAll()
                                 .requestMatchers("/webjars/**").permitAll()
-//                                .requestMatchers("/api/auth/manager/signup").hasAnyRole("ADMIN")
                                 .anyRequest().authenticated()
                 ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http.exceptionHandling()
+                .authenticationEntryPoint(
+                        (request, response, ex) -> {
+                            response.sendError(
+                                    HttpServletResponse.SC_UNAUTHORIZED,
+                                    ex.getMessage()
+                            );
+                        }
+                );
+
+        http.addFilterBefore(JwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
