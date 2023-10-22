@@ -38,7 +38,10 @@ public class SecurityConfig{
                         //authorize.anyRequest().authenticated()
                         authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
-                                .requestMatchers("/v3/api-docs/**").permitAll()
+                                .requestMatchers("/v3/api-docs/**").permitAll().
+                                requestMatchers(" /swagger-ui/swagger-ui-standalone-preset.js").permitAll()
+                                .requestMatchers("/swagger-ui/swagger-ui.css").permitAll()
+                                .requestMatchers("/swagger-ui/swagger-ui-bundle.js").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/swagger-resources/**").permitAll()
                                 .requestMatchers("/webjars/**").permitAll()

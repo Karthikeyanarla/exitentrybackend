@@ -14,6 +14,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info().title("EntryExit API")
                         .description("This api is used entry exit register")
-                        .version("1.0"));
+                        .version("1.0").license(new io.swagger.v3.oas.models.info.License().name("Apache 2.0")
+                                .url("https://springdoc.org")));
     }
 }

@@ -1,12 +1,11 @@
 package com.iitgn.entryexit.repositories;
 
-import com.iitgn.entryexit.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import com.iitgn.entryexit.entities.Security;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email);
+public interface SecurityRepository extends JpaRepository<Security, Long> {
+    Optional<Security> findByEmail(String email);
     Boolean existsByEmail(String email);
 }
-
