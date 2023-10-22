@@ -13,9 +13,11 @@ public interface UserService {
 
     Optional<User> getUserById(Long Id);
 
-//    Optional<User> updateUserById(Long id, User user);
+    void updateUserById(Long id, User user);
 
     void changePasswordById(Long id, String password);
 
     void changeNameById(Long id, String name);
+
+    void deleteUserById(Long id);
 }
